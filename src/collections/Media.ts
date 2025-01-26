@@ -8,8 +8,8 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { populateTenant } from '../hooks/populateTenant'
+import { tenantAccess } from '@/access/tenantAccess'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,16 +17,31 @@ const dirname = path.dirname(filename)
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    admin: () => true,
+    create: tenantAccess,
+    delete: tenantAccess,
+    read: tenantAccess,
+    update: tenantAccess,
+  },
+  admin: {
+    defaultColumns: ['filename', 'tenant', 'alt'],
   },
   fields: [
     {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
+      hooks: {
+        beforeChange: [populateTenant],
+      },
+    },
+    {
       name: 'alt',
       type: 'text',
-      //required: true,
     },
     {
       name: 'caption',
@@ -39,7 +54,6 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     focalPoint: true,

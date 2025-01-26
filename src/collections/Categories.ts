@@ -1,21 +1,30 @@
 import type { CollectionConfig } from 'payload'
-
-import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
 import { slugField } from '@/fields/slug'
+import { tenantAccess } from '@/access/tenantAccess'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    admin: () => true,
+    create: tenantAccess,
+    delete: tenantAccess,
+    read: tenantAccess,
+    update: tenantAccess,
   },
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'tenant'],
   },
   fields: [
+    {
+      name: 'tenant',
+      type: 'relationship',
+      relationTo: 'tenants',
+      required: true,
+      admin: {
+        position: 'sidebar',
+      },
+    },
     {
       name: 'title',
       type: 'text',
