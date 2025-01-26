@@ -18,6 +18,7 @@ import {
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { tenantAccess } from '@/access/tenantAccess'
+import { tenantField } from '@/fields/tenant'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -54,15 +55,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
   },
   fields: [
-    {
-      name: 'tenant',
-      type: 'relationship',
-      relationTo: 'tenants',
-      required: true,
-      admin: {
-        position: 'sidebar',
-      },
-    },
+    tenantField,
     {
       name: 'title',
       type: 'text',

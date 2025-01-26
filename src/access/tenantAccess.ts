@@ -4,7 +4,6 @@ export const tenantAccess: Access = ({ req: { user } }) => {
   const typedUser = user
 
   // Super admin can do anything
-  console.log('typedUser: ', typedUser)
   if (typedUser?.role === 'super-admin') return true
 
   // Regular users are restricted to their tenant

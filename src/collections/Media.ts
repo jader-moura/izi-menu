@@ -9,6 +9,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { tenantAccess } from '@/access/tenantAccess'
+import { tenantField } from '@/fields/tenant'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -26,18 +27,7 @@ export const Media: CollectionConfig = {
     defaultColumns: ['filename', 'tenant', 'alt'],
   },
   fields: [
-    {
-      name: 'tenant',
-      type: 'relationship',
-      relationTo: 'tenants',
-      required: true,
-      admin: {
-        position: 'sidebar',
-      },
-      // hooks: {
-      //   beforeChange: [populateTenant],
-      // },
-    },
+    tenantField,
     {
       name: 'alt',
       type: 'text',

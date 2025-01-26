@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
 import { tenantAccess } from '@/access/tenantAccess'
+import { tenantField } from '@/fields/tenant'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -16,15 +17,7 @@ export const Categories: CollectionConfig = {
     defaultColumns: ['title', 'tenant'],
   },
   fields: [
-    {
-      name: 'tenant',
-      type: 'relationship',
-      relationTo: 'tenants',
-      required: true,
-      admin: {
-        position: 'sidebar',
-      },
-    },
+    tenantField,
     {
       name: 'title',
       type: 'text',

@@ -9,6 +9,7 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email'],
+    hidden: ({ user }) => user?.role !== 'super-admin',
   },
   access: {
     admin: () => true,
@@ -30,16 +31,19 @@ export const Users: CollectionConfig = {
       // Super admin can read all users
       if (user?.role === 'super-admin') {
         return true
-      } else if (user?.tenant) {
-        console.log('user: ', user)
-        return {
-          tenant: {
-            equals: user.tenant,
-          },
-        }
       }
 
-      return false
+      // For unauthenticated requests (login)
+      if (!user) {
+        return true
+      }
+
+      // For authenticated users
+      return {
+        id: {
+          equals: user.id,
+        },
+      }
     },
     update: ({ req: { user } }) => {
       if (!user) return false
@@ -115,8 +119,14 @@ export const Users: CollectionConfig = {
       hooks: {
         beforeValidate: [
           async (args) => {
-            const { req, operation } = args
-            // If user is super-admin, remove tenant
+            const { req, operation, data } = args
+
+            // If user is super-admin, don't assign tenant
+            if (data?.role === 'super-admin') {
+              return null
+            }
+
+            // For regular users during create
             if (operation === 'create') {
               const tenantKey = uuidv4()
               const tenant = await req.payload.create({
@@ -129,6 +139,9 @@ export const Users: CollectionConfig = {
 
               return tenant.id
             }
+
+            // For existing users, keep their current tenant
+            return args.value
           },
         ],
       },

@@ -19,13 +19,18 @@ export const Tenants: CollectionConfig = {
       return false
     },
     read: ({ req: { user } }) => {
-      // Super admin can read all users
+      // Super admin can read all tenants
       if (user?.role === 'super-admin') return true
 
-      // Users can only read users in their tenant
+      // For regular users during login
+      if (!user) {
+        return true // Allow unauthenticated read for login
+      }
+
+      // For authenticated regular users
       if (user?.tenant) {
         return {
-          tenant: {
+          id: {
             equals: user.tenant,
           },
         }
@@ -49,6 +54,7 @@ export const Tenants: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
+    hidden: ({ user }) => user?.role !== 'super-admin',
   },
   fields: [
     {

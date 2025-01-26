@@ -25,6 +25,8 @@ import {
 
 import { slugField } from '@/fields/slug'
 import { tenantAccess } from '@/access/tenantAccess'
+import { autofillTenant } from '@/hooks/autofillTenant'
+import { tenantField } from '@/fields/tenant'
 
 export const Products: CollectionConfig<any> = {
   slug: 'products',
@@ -62,15 +64,7 @@ export const Products: CollectionConfig<any> = {
     useAsTitle: 'title',
   },
   fields: [
-    {
-      name: 'tenant',
-      type: 'relationship',
-      relationTo: 'tenants',
-      required: true,
-      admin: {
-        position: 'sidebar',
-      },
-    },
+    tenantField,
     {
       name: 'title',
       type: 'text',
