@@ -7,7 +7,6 @@ import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
-import { populateTenant } from '../../hooks/populateTenant'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
@@ -62,9 +61,6 @@ export const Pages: CollectionConfig = {
       required: true,
       admin: {
         position: 'sidebar',
-      },
-      hooks: {
-        beforeChange: [populateTenant],
       },
     },
     {

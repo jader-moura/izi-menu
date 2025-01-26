@@ -10,7 +10,7 @@ export const validateUserRole: FieldHook = async ({ req, value, operation, origi
 
   const isFirstUser = users.totalDocs === 0
   const isSuperAdmin = value === 'super-admin'
-  const wasSuperAdmin = (originalDoc as User)?.roles === 'super-admin'
+  const wasSuperAdmin = (originalDoc as User)?.role === 'super-admin'
 
   // If this is the first user being created, force super-admin role
   if (operation === 'create' && isFirstUser) {

@@ -31,6 +31,7 @@ export const Users: CollectionConfig = {
       if (user?.role === 'super-admin') {
         return true
       } else if (user?.tenant) {
+        console.log('user: ', user)
         return {
           tenant: {
             equals: user.tenant,

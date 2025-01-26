@@ -14,7 +14,6 @@ import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
-import { populateTenant } from '../../hooks/populateTenant'
 import { revalidateDelete, revalidateProduct } from './hooks/revalidateProduct'
 import {
   MetaDescriptionField,
@@ -70,9 +69,6 @@ export const Products: CollectionConfig<any> = {
       required: true,
       admin: {
         position: 'sidebar',
-      },
-      hooks: {
-        beforeChange: [populateTenant],
       },
     },
     {

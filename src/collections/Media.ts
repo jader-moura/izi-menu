@@ -8,7 +8,6 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { populateTenant } from '../hooks/populateTenant'
 import { tenantAccess } from '@/access/tenantAccess'
 
 const filename = fileURLToPath(import.meta.url)
@@ -35,9 +34,9 @@ export const Media: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
-      hooks: {
-        beforeChange: [populateTenant],
-      },
+      // hooks: {
+      //   beforeChange: [populateTenant],
+      // },
     },
     {
       name: 'alt',
