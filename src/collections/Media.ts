@@ -8,8 +8,9 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { tenantAccess } from '@/access/tenantAccess'
 import { tenantField } from '@/fields/tenant'
+import { tenantAccess } from '@/access/tenantAccess'
+import { readAccess } from '@/access/readAccess'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -20,7 +21,7 @@ export const Media: CollectionConfig = {
     admin: () => true,
     create: tenantAccess,
     delete: tenantAccess,
-    read: tenantAccess,
+    read: readAccess,
     update: tenantAccess,
   },
   admin: {

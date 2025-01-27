@@ -19,6 +19,7 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { tenantAccess } from '@/access/tenantAccess'
 import { tenantField } from '@/fields/tenant'
+import { readAccess } from '@/access/readAccess'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -26,7 +27,7 @@ export const Pages: CollectionConfig = {
     admin: () => true, // Allow all users to access admin UI
     create: tenantAccess,
     delete: tenantAccess,
-    read: tenantAccess,
+    read: readAccess,
     update: tenantAccess,
   },
   defaultPopulate: {

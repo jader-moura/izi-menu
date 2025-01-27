@@ -10,9 +10,18 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 export const ArchiveBlock: React.FC<
   ArchiveBlockProps & {
     id?: string
+    tenant: string
   }
 > = async (props) => {
-  const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+  const {
+    id,
+    categories,
+    introContent,
+    limit: limitFromProps,
+    populateBy,
+    selectedDocs,
+    tenant,
+  } = props
 
   const limit = limitFromProps || 3
 
@@ -26,29 +35,96 @@ export const ArchiveBlock: React.FC<
       else return category
     })
 
+    // First get the tenant ID
+    const tenantQuery = await payload.find({
+      collection: 'tenants',
+      where: {
+        slug: {
+          equals: tenant,
+        },
+      },
+      limit: 1,
+    })
+
+    const tenantId = tenantQuery.docs[0]?.id
+
+    if (!tenantId) {
+      return null
+    }
+
+    // Then query products with tenant filter
     const fetchedProducts = await payload.find({
       collection: 'products',
       depth: 1,
       limit,
-      ...(flattenedCategories && flattenedCategories.length > 0
-        ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
+      where: {
+        and: [
+          {
+            tenant: {
+              equals: tenantId,
             },
-          }
-        : {}),
+          },
+          ...(flattenedCategories && flattenedCategories.length > 0
+            ? [
+                {
+                  categories: {
+                    in: flattenedCategories,
+                  },
+                },
+              ]
+            : []),
+        ],
+      },
     })
 
     products = fetchedProducts.docs
   } else {
     if (selectedDocs?.length) {
-      const filteredSelectedProducts = selectedDocs.map((product) => {
-        if (typeof product.value === 'object') return product.value
-      }) as Product[]
+      const payload = await getPayload({ config: configPromise })
 
-      products = filteredSelectedProducts
+      // Get tenant ID
+      const tenantQuery = await payload.find({
+        collection: 'tenants',
+        where: {
+          slug: {
+            equals: tenant,
+          },
+        },
+        limit: 1,
+      })
+
+      const tenantId = tenantQuery.docs[0]?.id
+
+      if (!tenantId) {
+        return null
+      }
+
+      // Filter selected products by tenant
+      const selectedProductIds = selectedDocs.map((doc) => {
+        if (typeof doc === 'string') return doc
+        return doc.value
+      })
+
+      const fetchedProducts = await payload.find({
+        collection: 'products',
+        depth: 1,
+        where: {
+          and: [
+            {
+              tenant: {
+                equals: tenantId,
+              },
+            },
+            {
+              id: {
+                in: selectedProductIds,
+              },
+            },
+          ],
+        },
+      })
+
+      products = fetchedProducts.docs
     }
   }
 

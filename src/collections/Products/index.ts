@@ -13,7 +13,6 @@ import { Banner } from '../../blocks/Banner/config'
 import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
-import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidateProduct } from './hooks/revalidateProduct'
 import {
   MetaDescriptionField,
@@ -24,9 +23,9 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 
 import { slugField } from '@/fields/slug'
-import { tenantAccess } from '@/access/tenantAccess'
-import { autofillTenant } from '@/hooks/autofillTenant'
 import { tenantField } from '@/fields/tenant'
+import { tenantAccess } from '@/access/tenantAccess'
+import { readAccess } from '@/access/readAccess'
 
 export const Products: CollectionConfig<any> = {
   slug: 'products',
@@ -34,7 +33,7 @@ export const Products: CollectionConfig<any> = {
     admin: () => true,
     create: tenantAccess,
     delete: tenantAccess,
-    read: tenantAccess,
+    read: readAccess,
     update: tenantAccess,
   },
   defaultPopulate: {
@@ -195,7 +194,6 @@ export const Products: CollectionConfig<any> = {
   ],
   hooks: {
     afterChange: [revalidateProduct],
-    afterRead: [populateAuthors],
     afterDelete: [revalidateDelete],
   },
   versions: {
