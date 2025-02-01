@@ -8,6 +8,9 @@ export const tenantField: Field = {
   required: true,
   admin: {
     position: 'sidebar',
+    condition: (data, siblingData, { user }) => {
+      return user?.role === 'super-admin'
+    },
   },
   hooks: {
     beforeValidate: [autofillTenant],

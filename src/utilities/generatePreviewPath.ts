@@ -1,18 +1,14 @@
 import { PayloadRequest, CollectionSlug } from 'payload'
 
-const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
-  products: '/products',
-  pages: '',
-}
-
 type Props = {
-  collection: keyof typeof collectionPrefixMap
+  collection: CollectionSlug
   slug: string
   req: PayloadRequest
+  tenant: string
 }
 
-export const generatePreviewPath = ({ collection, slug, req }: Props) => {
-  const path = `${collectionPrefixMap[collection]}/${slug}`
+export const generatePreviewPath = ({ collection, slug, req, tenant }: Props) => {
+  const path = `/${tenant}/${slug}`
 
   const params = {
     slug,

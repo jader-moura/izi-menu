@@ -19,7 +19,6 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { tenantAccess } from '@/access/tenantAccess'
 import { tenantField } from '@/fields/tenant'
-import { readAccess } from '@/access/readAccess'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -27,32 +26,38 @@ export const Pages: CollectionConfig = {
     admin: () => true, // Allow all users to access admin UI
     create: tenantAccess,
     delete: tenantAccess,
-    read: readAccess,
+    read: tenantAccess,
     update: tenantAccess,
   },
   defaultPopulate: {
     title: true,
     slug: true,
   },
+
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) => {
-        const path = generatePreviewPath({
+        const tenant = typeof req.user?.tenant !== 'number' ? `${req.user?.tenant?.slug}` : ''
+
+        return generatePreviewPath({
           slug: typeof data?.slug === 'string' ? data.slug : '',
           collection: 'pages',
           req,
+          tenant,
         })
-
-        return path
       },
     },
-    preview: (data, { req }) =>
-      generatePreviewPath({
+    preview: (data, { req }) => {
+      const tenant = typeof req.user?.tenant !== 'number' ? `${req.user?.tenant?.slug}` : ''
+
+      return generatePreviewPath({
         slug: typeof data?.slug === 'string' ? data.slug : '',
         collection: 'pages',
         req,
-      }),
+        tenant,
+      })
+    },
     useAsTitle: 'title',
   },
   fields: [

@@ -2,7 +2,6 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
 import { tenantAccess } from '@/access/tenantAccess'
 import { tenantField } from '@/fields/tenant'
-import { readAccess } from '@/access/readAccess'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
@@ -10,7 +9,7 @@ export const Categories: CollectionConfig = {
     admin: () => true,
     create: tenantAccess,
     delete: tenantAccess,
-    read: readAccess,
+    read: tenantAccess,
     update: tenantAccess,
   },
   admin: {

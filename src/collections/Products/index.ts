@@ -1,18 +1,5 @@
 import type { CollectionConfig } from 'payload'
 
-import {
-  BlocksFeature,
-  FixedToolbarFeature,
-  HeadingFeature,
-  HorizontalRuleFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
-
-import { Banner } from '../../blocks/Banner/config'
-import { Code } from '../../blocks/Code/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidateProduct } from './hooks/revalidateProduct'
 import {
   MetaDescriptionField,
@@ -25,7 +12,6 @@ import {
 import { slugField } from '@/fields/slug'
 import { tenantField } from '@/fields/tenant'
 import { tenantAccess } from '@/access/tenantAccess'
-import { readAccess } from '@/access/readAccess'
 
 export const Products: CollectionConfig<any> = {
   slug: 'products',
@@ -33,7 +19,7 @@ export const Products: CollectionConfig<any> = {
     admin: () => true,
     create: tenantAccess,
     delete: tenantAccess,
-    read: readAccess,
+    read: tenantAccess,
     update: tenantAccess,
   },
   defaultPopulate: {
@@ -86,24 +72,11 @@ export const Products: CollectionConfig<any> = {
             {
               name: 'price',
               type: 'number',
+              required: true,
             },
             {
-              name: 'content',
-              type: 'richText',
-              editor: lexicalEditor({
-                features: ({ rootFeatures }) => {
-                  return [
-                    ...rootFeatures,
-                    HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-                    BlocksFeature({ blocks: [Banner, Code, MediaBlock] }),
-                    FixedToolbarFeature(),
-                    InlineToolbarFeature(),
-                    HorizontalRuleFeature(),
-                  ]
-                },
-              }),
-              label: false,
-              required: true,
+              name: 'salePrice',
+              type: 'number',
             },
           ],
           label: 'Content',
@@ -134,13 +107,6 @@ export const Products: CollectionConfig<any> = {
               },
               hasMany: true,
               relationTo: 'categories',
-            },
-            {
-              name: 'owner',
-              type: 'relationship',
-              relationTo: 'users',
-              required: true,
-              hidden: true,
             },
           ],
           label: 'Meta',

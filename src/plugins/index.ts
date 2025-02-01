@@ -1,4 +1,4 @@
-import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -8,7 +8,6 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
-import { readAccess } from '@/access/readAccess'
 import { tenantAccess } from '@/access/tenantAccess'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
@@ -36,7 +35,7 @@ export const plugins: Plugin[] = [
     },
     formOverrides: {
       access: {
-        read: readAccess,
+        read: tenantAccess,
         create: tenantAccess,
         update: tenantAccess,
         delete: tenantAccess,
@@ -62,5 +61,18 @@ export const plugins: Plugin[] = [
       },
     },
   }),
-  payloadCloudPlugin(),
+  s3Storage({
+    acl: 'private',
+    collections: {
+      media: true,
+    },
+    bucket: process.env.AWS_BUCKET_NAME || '',
+    config: {
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY || '',
+        secretAccessKey: process.env.AWS_SECRET_KEY || '',
+      },
+      region: process.env.AWS_BUCKET_REGION,
+    },
+  }),
 ]

@@ -121,7 +121,7 @@ export interface Tenant {
  */
 export interface Page {
   id: number;
-  tenant: number | Tenant;
+  tenant?: (number | null) | Tenant;
   title: string;
   hero: {
     type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
@@ -188,29 +188,14 @@ export interface Page {
  */
 export interface Product {
   id: number;
-  tenant: number | Tenant;
+  tenant?: (number | null) | Tenant;
   title: string;
   heroImage?: (number | null) | Media;
   description?: string | null;
-  price?: number | null;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  price: number;
+  salePrice?: number | null;
   relatedProducts?: (number | Product)[] | null;
   categories?: (number | Category)[] | null;
-  owner: number | User;
   meta?: {
     title?: string | null;
     /**
@@ -232,7 +217,7 @@ export interface Product {
  */
 export interface Media {
   id: number;
-  tenant: number | Tenant;
+  tenant?: (number | null) | Tenant;
   alt?: string | null;
   caption?: {
     root: {
@@ -325,7 +310,7 @@ export interface Media {
  */
 export interface Category {
   id: number;
-  tenant: number | Tenant;
+  tenant?: (number | null) | Tenant;
   title: string;
   slug?: string | null;
   slugLock?: boolean | null;
@@ -1051,10 +1036,9 @@ export interface ProductsSelect<T extends boolean = true> {
   heroImage?: T;
   description?: T;
   price?: T;
-  content?: T;
+  salePrice?: T;
   relatedProducts?: T;
   categories?: T;
-  owner?: T;
   meta?:
     | T
     | {
@@ -1520,42 +1504,6 @@ export interface TaskSchedulePublish {
     user?: (number | null) | User;
   };
   output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerBlock".
- */
-export interface BannerBlock {
-  style: 'info' | 'warning' | 'error' | 'success';
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'banner';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CodeBlock".
- */
-export interface CodeBlock {
-  language?: ('typescript' | 'javascript' | 'css') | null;
-  code: string;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'code';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

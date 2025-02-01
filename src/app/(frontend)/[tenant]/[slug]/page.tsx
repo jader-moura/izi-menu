@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
 
-import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
-import { redirect } from 'next/navigation'
 import React, { cache } from 'react'
 
 import type { Page as PageType } from '@/payload-types'
@@ -14,6 +12,7 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { notFound } from 'next/navigation'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -22,8 +21,8 @@ export async function generateStaticParams() {
   const pages = await payload.find({
     collection: 'pages',
     draft: false,
-    limit: 1000,
-    overrideAccess: false,
+    limit: 1,
+    overrideAccess: true,
     pagination: false,
     depth: 1,
     select: {
@@ -58,26 +57,6 @@ type Args = {
 export default async function Page({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = 'home', tenant } = await paramsPromise
-  const url = `/${tenant}/${slug}`
-
-  const payload = await getPayload({ config: configPromise })
-
-  const tenantsQuery = await payload.find({
-    collection: 'tenants',
-    overrideAccess: false,
-    where: {
-      slug: {
-        equals: tenant,
-      },
-    },
-  })
-
-  // If no tenant is found, redirect to login
-  if (tenantsQuery.docs.length === 0) {
-    redirect(
-      `/${tenant}/login?redirect=${encodeURIComponent(`/${tenant}${slug ? `/${slug}` : ''}`)}`,
-    )
-  }
 
   const page = await queryPageBySlug({
     slug,
@@ -85,7 +64,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
 
   if (!page) {
-    return <PayloadRedirects url={url} />
+    return notFound()
   }
 
   const { hero, layout } = page
@@ -93,8 +72,6 @@ export default async function Page({ params: paramsPromise }: Args) {
   return (
     <article className="pt-16 pb-24">
       <PageClient />
-      {/* Allows redirects for valid pages too */}
-      <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
