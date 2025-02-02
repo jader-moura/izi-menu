@@ -13,13 +13,14 @@ export const Users: CollectionConfig = {
   },
   access: {
     admin: () => true,
-    create: ({ req: { user } }) => {
-      // Super admin can create any user
-      if (user?.role === 'super-admin') return true
+    create: () => true,
+    // create: ({ req: { user } }) => {
+    //   // Super admin can create any user
+    //   if (user?.role === 'super-admin') return true
 
-      // Regular users cannot create users
-      return false
-    },
+    //   // Regular users cannot create users
+    //   return false
+    // },
     delete: ({ req: { user } }) => {
       // Super admin can delete any user
       if (user?.role === 'super-admin') return true

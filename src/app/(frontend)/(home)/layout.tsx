@@ -6,15 +6,15 @@ import { GeistSans } from 'geist/font/sans'
 import React from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
-import { Footer } from '@/Footer/Component'
-import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
+import { IziHeader } from '@/IziHeader/Component'
 
-import './globals.css'
+import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { IziFooter } from '@/IziFooter'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -34,9 +34,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
 
-          <Header />
+          <IziHeader />
+
           {children}
-          <Footer />
+          <IziFooter />
         </Providers>
       </body>
     </html>
