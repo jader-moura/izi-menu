@@ -1,6 +1,7 @@
-import { isSuperAdmin } from '@/access/isSuperAdmin'
+// import { isSuperAdmin } from '@/access/isSuperAdmin'
+import { tenantAccess } from '@/access/tenantAccess'
 import { formatSlug } from '@/fields/slug/formatSlug'
-import { CollectionConfig } from 'payload'
+import { CollectionConfig, PayloadRequest } from 'payload'
 import { v4 as uuidv4 } from 'uuid'
 
 export const Users: CollectionConfig = {
@@ -13,53 +14,48 @@ export const Users: CollectionConfig = {
   },
   access: {
     admin: () => true,
-    create: () => true,
-    // create: ({ req: { user } }) => {
-    //   // Super admin can create any user
-    //   if (user?.role === 'super-admin') return true
-
-    //   // Regular users cannot create users
-    //   return false
-    // },
-    delete: ({ req: { user } }) => {
-      // Super admin can delete any user
-      if (user?.role === 'super-admin') return true
-
-      // Regular users cannot delete users
-      return false
-    },
-    read: ({ req: { user } }) => {
-      // Super admin can read all users
-      if (user?.role === 'super-admin') {
-        return true
-      }
-
-      // For unauthenticated requests (login)
-      if (!user) {
-        return true
-      }
-
-      // For authenticated users
-      return {
-        id: {
-          equals: user.id,
-        },
-      }
-    },
-    update: ({ req: { user } }) => {
-      if (!user) return false
-
-      // Super admin can update any user
-      if (user.role === 'super-admin') return true
-
-      // Regular users can only update themselves
-      return {
-        id: {
-          equals: user.id,
-        },
-      }
-    },
+    create: ({ req: { user } }) => user?.role === 'super-admin',
+    delete: ({ req: { user } }) => user?.role === 'super-admin',
+    read: tenantAccess,
+    update: tenantAccess,
   },
+  endpoints: [
+    {
+      path: '/new',
+      method: 'post',
+      handler: async (req: PayloadRequest) => {
+        if (
+          req?.credentials !== 'same-origin' ||
+          req?.origin !== process.env.NEXT_PUBLIC_SERVER_URL
+        ) {
+          return Response.json({ error: 'Invalid origin' }, { status: 403 })
+        }
+        const data = req.json ? await req.json() : {}
+
+        if (!data?.email || !data?.password) {
+          return Response.json({ error: 'Invalid data' }, { status: 400 })
+        }
+
+        try {
+          await req.payload.create({
+            collection: 'users',
+            overrideAccess: true,
+            data,
+          })
+
+          return Response.json(
+            {
+              message: 'User created successfully',
+            },
+            { status: 200 },
+          )
+        } catch (error) {
+          console.error(error)
+          return Response.json({ error: 'Failed to create user' }, { status: 500 })
+        }
+      },
+    },
+  ],
   fields: [
     {
       name: 'name',

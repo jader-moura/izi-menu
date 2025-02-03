@@ -42,10 +42,10 @@ export const IziHeaderClient: React.FC<IziHeaderClientProps> = () => {
           />
         </Link>
         <nav className="flex gap-6 items-center">
-          <Link href="/admin" className="border py-1 px-3 border-black dark:border-white">
+          <Link href="/admin/login" className="border py-1 px-3 border-black dark:border-white">
             Entrar
           </Link>
-          <Link href="/search" className="bg-main text-white border py-1 px-3 border-main">
+          <Link href="/signup" className="bg-main text-white border py-1 px-3 border-main">
             Cadastre-se
           </Link>
         </nav>
