@@ -39,17 +39,11 @@ export const Tenants: CollectionConfig = {
       return false
     },
     update: ({ req: { user } }) => {
-      if (!user) return false
+      // Super admin can create any user
+      if (user?.role === 'super-admin') return true
 
-      // Super admin can update any user
-      if (user.role === 'super-admin') return true
-
-      // Regular users can only update themselves
-      return {
-        id: {
-          equals: user.id,
-        },
-      }
+      // Regular users cannot create users
+      return false
     },
   },
   admin: {

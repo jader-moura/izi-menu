@@ -74,27 +74,29 @@ export const Users: CollectionConfig = {
       },
       hooks: {
         beforeChange: [
-          async ({ req, value }) => {
-            // Get total users count
-            const users = await req.payload.find({
-              collection: 'users',
-              limit: 0,
-            })
+          async ({ req, value, operation }) => {
+            if (operation === 'create') {
+              // Get total users count
+              const users = await req.payload.find({
+                collection: 'users',
+                limit: 0,
+              })
 
-            const isFirstUser = users.totalDocs === 0
-            const isSuperAdmin = value === 'super-admin'
+              const isFirstUser = users.totalDocs === 0
+              const isSuperAdmin = value === 'super-admin'
 
-            // If this is the first user being created, force super-admin role
-            if (isFirstUser) {
-              return 'super-admin'
+              // If this is the first user being created, force super-admin role
+              if (isFirstUser) {
+                return 'super-admin'
+              }
+
+              // If this is not the first user, prevent super-admin role
+              if (isSuperAdmin) {
+                throw new Error('Only the first user can be a super-admin')
+              }
+
+              return value
             }
-
-            // If this is not the first user, prevent super-admin role
-            if (isSuperAdmin) {
-              throw new Error('Only the first user can be a super-admin')
-            }
-
-            return value
           },
         ],
       },
@@ -110,9 +112,9 @@ export const Users: CollectionConfig = {
       access: {
         update: ({ req: { user } }) => user?.role === 'super-admin',
       },
-      admin: {
-        condition: (data) => !data.role?.includes('super-admin'),
-      },
+      // admin: {
+      //   condition: (data) => !data.role?.includes('super-admin'),
+      // },
       hooks: {
         beforeValidate: [
           async (args) => {
@@ -125,6 +127,25 @@ export const Users: CollectionConfig = {
 
             // For regular users during create
             if (operation === 'create') {
+              const users = await req.payload.find({
+                collection: 'users',
+                limit: 0,
+              })
+
+              const isFirstUser = users.totalDocs === 0
+
+              if (isFirstUser) {
+                const tenant = await req.payload.create({
+                  collection: 'tenants',
+                  data: {
+                    name: 'Main Admin',
+                    slug: 'main-admin',
+                  },
+                })
+
+                return tenant.id
+              }
+
               const tenantKey = uuidv4()
               const tenant = await req.payload.create({
                 collection: 'tenants',
