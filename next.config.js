@@ -11,10 +11,20 @@ const nextConfig = {
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)
 
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', ''),
-        }
+        return (
+          {
+            hostname: url.hostname,
+            protocol: url.protocol.replace(':', ''),
+          },
+          {
+            hotname: 's3.amazonaws.com',
+            protocol: 'https',
+          },
+          {
+            hotname: 'izi-menu.vercel.app',
+            protocol: 'https',
+          }
+        )
       }),
     ],
   },
