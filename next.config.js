@@ -7,25 +7,25 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true,
-    // remotePatterns: [
-    //   ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-    //     const url = new URL(item)
+    // unoptimized: true,
+    remotePatterns: [
+      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
+        const url = new URL(item)
 
-    //     return {
-    //       hostname: url.hostname,
-    //       protocol: url.protocol.replace(':', ''),
-    //     }
-    //   }),
-    //   {
-    //     hostname: 's3.amazonaws.com',
-    //     protocol: 'https',
-    //   },
-    //   {
-    //     hostname: 'izi-menu.vercel.app',
-    //     protocol: 'https',
-    //   },
-    // ],
+        return {
+          hostname: url.hostname,
+          protocol: url.protocol.replace(':', ''),
+        }
+      }),
+      {
+        hostname: 's3.amazonaws.com',
+        protocol: 'https',
+      },
+      {
+        hostname: 'izi-menu.vercel.app',
+        protocol: 'https',
+      },
+    ],
   },
   reactStrictMode: true,
 }
