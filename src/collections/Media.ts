@@ -20,9 +20,9 @@ export const Media: CollectionConfig = {
     admin: () => true,
     create: tenantAccess,
     delete: tenantAccess,
-    // read: tenantAccess,
-    read: () => true, // Allow public read access, must be changed
     update: tenantAccess,
+    read: tenantAccess,
+    // read: () => true, // Allow public read access, must be changed
   },
   admin: {
     defaultColumns: ['filename', 'tenant', 'alt'],
