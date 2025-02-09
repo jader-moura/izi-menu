@@ -108,6 +108,7 @@ export const ArchiveBlock: React.FC<
       const fetchedProducts = await payload.find({
         collection: 'products',
         depth: 1,
+        overrideAccess: true,
         where: {
           and: [
             {

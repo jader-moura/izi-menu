@@ -117,6 +117,7 @@ const queryPageBySlug = cache(async ({ slug, tenant }: { slug: string; tenant: s
     // Then query the page with the tenant ID
     const result = await payload.find({
       collection: 'pages',
+      overrideAccess: true,
       where: {
         and: [
           {
