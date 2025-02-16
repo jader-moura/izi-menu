@@ -12,6 +12,7 @@ import { Pages } from './collections/Pages'
 import { Products } from './collections/Products'
 import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
+import { Stores } from './collections/Stores'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -26,6 +27,12 @@ export default buildConfig({
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
       beforeDashboard: ['@/components/BeforeDashboard'],
+      views: {
+        myCustomView: {
+          Component: '@/views/StoreDashboard#StoreDashboard',
+          path: '/my-store',
+        },
+      },
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -61,7 +68,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Users, Tenants, Pages, Products, Media, Categories],
+  collections: [Users, Tenants, Pages, Products, Media, Categories, Stores],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

@@ -125,7 +125,6 @@ export const Users: CollectionConfig = {
               return null
             }
 
-            // For regular users during create
             if (operation === 'create') {
               const users = await req.payload.find({
                 collection: 'users',
@@ -146,6 +145,7 @@ export const Users: CollectionConfig = {
                 return tenant.id
               }
 
+              // For regular users during create
               const tenantKey = uuidv4()
               const tenant = await req.payload.create({
                 collection: 'tenants',
@@ -153,6 +153,14 @@ export const Users: CollectionConfig = {
                   name: tenantKey,
                   slug: formatSlug(tenantKey.slice(0, 5)),
                 },
+              })
+
+              const store = await req.payload.create({
+                collection: 'stores',
+                data: {
+                  name: `${data?.name} store`,
+                  tenant: tenant.id,
+                }
               })
 
               return tenant.id
