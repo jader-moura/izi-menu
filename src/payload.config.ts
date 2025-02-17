@@ -27,10 +27,15 @@ export default buildConfig({
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
       beforeDashboard: ['@/components/BeforeDashboard'],
+      beforeNavLinks: ['@/components/MyStoreLink'],
       views: {
-        myCustomView: {
+        editStore: {
           Component: '@/views/StoreDashboard#StoreDashboard',
           path: '/my-store',
+          meta: {
+            title: 'My Store',
+            description: 'This is a custom view',
+          },
         },
       },
     },
