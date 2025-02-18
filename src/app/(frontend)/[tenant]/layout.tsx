@@ -11,13 +11,18 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode } from 'next/headers'
+import { draftMode, headers } from 'next/headers'
+
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 
 import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { Store } from '@/payload-types'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
+  const { slug, store } = await getStoreBySlug()
 
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
@@ -34,9 +39,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
 
-          <Header />
+          <Header slug={slug} store={store} />
           {children}
-          <Footer />
+          <Footer slug={slug} store={store} />
         </Providers>
       </body>
     </html>
@@ -50,4 +55,47 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     creator: '@payloadcms',
   },
+}
+
+async function getStoreBySlug(){
+  const headersList = headers();
+  const fullUrl = (await headersList)?.get('referer') || "";
+  const slug = fullUrl.split("/")[3] || ""
+  
+  const payload = await getPayload({ config: configPromise })
+
+  const { docs: tenants } = await payload.find({
+    collection: 'tenants',
+    draft: false,
+    limit: 0,
+    overrideAccess: true,
+    pagination: false,
+    depth: 1,
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+  })
+
+  const tenantId = tenants[0]?.id
+
+
+  const { docs } = await payload.find({
+    collection: 'stores',
+    draft: false,
+    limit: 1,
+    overrideAccess: true,
+    pagination: false,
+    depth: 1,
+    where: {
+      tenant: {
+        equals: tenantId,
+      },
+    },
+  })
+
+  const store: Store = docs[0] || {} as Store;
+
+  return { store, slug }
 }
