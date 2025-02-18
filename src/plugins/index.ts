@@ -11,7 +11,7 @@ import { getServerSideURL } from '@/utilities/getURL'
 import { tenantAccess } from '@/access/tenantAccess'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+  return doc?.title ? `${doc.title} | IZI Menu` : 'IZI Menu'
 }
 
 const generateURL: GenerateURL<Product | Page> = ({ doc }) => {

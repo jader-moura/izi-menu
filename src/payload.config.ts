@@ -13,6 +13,7 @@ import { Products } from './collections/Products'
 import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
 import { Stores } from './collections/Stores'
+import { Store } from './collections/Store'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -27,7 +28,6 @@ export default buildConfig({
     components: {
       beforeLogin: ['@/components/BeforeLogin'],
       beforeDashboard: ['@/components/BeforeDashboard'],
-      beforeNavLinks: ['@/components/MyStoreLink'],
       views: {
         editStore: {
           Component: '@/views/StoreDashboard#StoreDashboard',

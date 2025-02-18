@@ -1,13 +1,24 @@
 // import { isSuperAdmin } from '@/access/isSuperAdmin'
 import { tenantAccess } from '@/access/tenantAccess'
 import { CollectionConfig, PayloadRequest } from 'payload'
+import { redirect } from 'next/navigation'
 
 export const Stores: CollectionConfig = {
   slug: 'stores',
   admin: {
     useAsTitle: 'name',
-    hidden: ({ user }) => user?.role !== 'super-admin',
+    // hidden: ({ user }) => user?.role !== 'super-admin',
+
   },
+    // hooks: {
+    //   beforeRead: [ (args) => {
+    //     const { req : { url, user: { role } }, doc: { id }} = args;
+
+    //     if (url === "/admin/collections/stores" && role === "user") {
+    //      return redirect(`/admin/collections/stores/${id}`)
+    //     }
+    //   }]
+    // },
   access: {
     admin: () => true,
     create: ({ req: { user } }) => user?.role === 'super-admin',
@@ -22,7 +33,8 @@ export const Stores: CollectionConfig = {
       relationTo: 'tenants',
       required: true,
       saveToJWT: true,
-      unique: true
+      unique: true,
+      hidden: true
     },
     {
       name: 'name',
