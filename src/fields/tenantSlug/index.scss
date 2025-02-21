@@ -1,0 +1,20 @@
+.tenant-slug-field-component {
+  span.description {
+    padding-top: 16px;
+  }
+
+  .tenant-slug-field-label {
+    padding-top: 24px;
+  }
+  .tenant-slug-input-wrapper {
+    position: relative;
+    
+    .tenant-slug-lock-button {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      bottom: 2px;
+      margin: 0;
+    }
+  }
+}

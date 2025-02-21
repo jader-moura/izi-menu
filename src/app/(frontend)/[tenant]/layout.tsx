@@ -57,29 +57,12 @@ export const metadata: Metadata = {
   },
 }
 
-async function getStoreBySlug(){
-  const headersList = headers();
-  const fullUrl = (await headersList)?.get('referer') || "";
-  const slug = fullUrl.split("/")[3] || ""
-  
+async function getStoreBySlug() {
+  const headersList = headers()
+  const fullUrl = (await headersList)?.get('referer') || ''
+  const slug = fullUrl.split('/')[3] || ''
+
   const payload = await getPayload({ config: configPromise })
-
-  const { docs: tenants } = await payload.find({
-    collection: 'tenants',
-    draft: false,
-    limit: 0,
-    overrideAccess: true,
-    pagination: false,
-    depth: 1,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-
-  const tenantId = tenants[0]?.id
-
 
   const { docs } = await payload.find({
     collection: 'stores',
@@ -89,13 +72,13 @@ async function getStoreBySlug(){
     pagination: false,
     depth: 1,
     where: {
-      tenant: {
-        equals: tenantId,
+      'tenant.slug': {
+        equals: slug,
       },
     },
   })
 
-  const store: Store = docs[0] || {} as Store;
+  const store: Store = docs[0] || ({} as Store)
 
   return { store, slug }
 }

@@ -167,7 +167,6 @@ export interface Tenant {
   id: number;
   name: string;
   slug: string;
-  public?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -733,8 +732,8 @@ export interface Store {
   name?: string | null;
   logo?: (number | null) | Media;
   whatsapp?: number | null;
-  address?: {
-    country?: 'BR' | null;
+  address: {
+    country: 'BR';
     postalCode?: string | null;
     state?:
       | (
@@ -998,7 +997,6 @@ export interface UsersSelect<T extends boolean = true> {
 export interface TenantsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
-  public?: T;
   updatedAt?: T;
   createdAt?: T;
 }

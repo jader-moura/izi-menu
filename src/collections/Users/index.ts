@@ -1,6 +1,6 @@
 // import { isSuperAdmin } from '@/access/isSuperAdmin'
 import { tenantAccess } from '@/access/tenantAccess'
-import { formatSlug } from '@/fields/slug/formatSlug'
+import { formatSlug } from '@/utilities/formatSlug'
 import { CollectionConfig, PayloadRequest } from 'payload'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -160,7 +160,7 @@ export const Users: CollectionConfig = {
                 data: {
                   name: `${data?.name} store`,
                   tenant: tenant.id,
-                }
+                },
               })
 
               return tenant.id

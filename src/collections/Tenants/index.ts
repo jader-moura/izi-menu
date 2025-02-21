@@ -75,11 +75,11 @@ export const Tenants: CollectionConfig = {
         ],
       },
     },
-    {
-      name: 'public',
-      type: 'checkbox',
-      defaultValue: false,
-    },
+    // {
+    //   name: 'public',
+    //   type: 'checkbox',
+    //   defaultValue: false,
+    // },
   ],
   timestamps: true,
 }

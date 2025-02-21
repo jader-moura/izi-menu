@@ -13,7 +13,7 @@ import { slugField } from '@/fields/slug'
 import { tenantField } from '@/fields/tenant'
 import { tenantAccess } from '@/access/tenantAccess'
 
-export const Products: CollectionConfig<any> = {
+export const Products: CollectionConfig = {
   slug: 'products',
   access: {
     admin: () => true,
