@@ -44,7 +44,7 @@ export const Products: CollectionConfig = {
         {
           fields: [
             {
-              name: 'heroImage',
+              name: 'image',
               type: 'upload',
               relationTo: 'media',
             },
@@ -53,46 +53,21 @@ export const Products: CollectionConfig = {
               type: 'textarea',
             },
             {
-              name: 'price',
-              type: 'number',
-              required: true,
-            },
-            {
-              name: 'salePrice',
-              type: 'number',
+              type: 'row',
+              fields: [
+                {
+                  name: 'price',
+                  type: 'number',
+                  required: true,
+                },
+                {
+                  name: 'salePrice',
+                  type: 'number',
+                },
+              ],
             },
           ],
           label: 'Content',
-        },
-        {
-          fields: [
-            {
-              name: 'relatedProducts',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              filterOptions: ({ id }) => {
-                return {
-                  id: {
-                    not_in: [id],
-                  },
-                }
-              },
-              hasMany: true,
-              relationTo: 'products',
-            },
-            {
-              name: 'categories',
-              type: 'relationship',
-              admin: {
-                position: 'sidebar',
-              },
-              hasMany: true,
-              relationTo: 'categories',
-            },
-          ],
-          label: 'Meta',
         },
         {
           name: 'meta',
@@ -140,6 +115,15 @@ export const Products: CollectionConfig = {
       },
     },
     ...slugField(),
+    {
+      name: 'categories',
+      type: 'relationship',
+      admin: {
+        position: 'sidebar',
+      },
+      hasMany: true,
+      relationTo: 'categories',
+    },
   ],
   hooks: {
     afterChange: [revalidateProduct],

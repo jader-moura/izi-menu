@@ -144,6 +144,327 @@ export const Stores: CollectionConfig = {
         },
       ],
     },
+    {
+      type: 'group',
+      name: 'openingHours',
+      fields: [
+        {
+          name: 'sunday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'monday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'tuesday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'wednesday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'thursday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'friday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'saturday',
+          type: 'group',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isClosed',
+                  type: 'checkbox',
+                  admin: {
+                    width: '100%',
+                  },
+                },
+                {
+                  name: 'open',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+                {
+                  name: 'close',
+                  type: 'date',
+                  admin: {
+                    date: {
+                      pickerAppearance: 'timeOnly',
+                      displayFormat: 'h:mm:ss a',
+                    },
+                    condition: (_, { isClosed } = {}) => !isClosed,
+                    width: '50%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'group',
+      name: 'delivery',
+      fields: [
+        {
+          type: 'number',
+          name: 'deliveryPrice',
+        },
+        {
+          type: 'number',
+          name: 'deliveryTime',
+          admin: {
+            description: 'Delivery time in minutes',
+          },
+        },
+        {
+          type: 'number',
+          name: 'minimumValue',
+        },
+      ],
+    },
   ],
   timestamps: true,
 }

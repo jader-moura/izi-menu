@@ -24,7 +24,7 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = (props) => {
         {docs?.map((doc, index) => {
           if (typeof doc === 'string') return null
 
-          return <Card key={index} doc={doc} relationTo="products" showCategories />
+          return <Card key={index} doc={doc} relationTo="products" />
         })}
       </div>
     </div>

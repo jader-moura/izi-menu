@@ -45,7 +45,9 @@ export const TenantSlugComponentClient: React.FC<TenantSlugComponentClientProps>
     <div className="tenant-slug-field-component">
       <h2>Store Slug</h2>
       <span className="description">The slug that will appear in your project url</span>
-      <FieldLabel label="Current Slug" />
+      <div className="tenant-slug-field-label">
+        <FieldLabel label="Current Slug" />
+      </div>
       <div className="tenant-slug-input-wrapper">
         <TextInput
           value={fieldValue}

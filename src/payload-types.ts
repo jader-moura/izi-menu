@@ -245,12 +245,10 @@ export interface Product {
   id: number;
   tenant?: (number | null) | Tenant;
   title: string;
-  heroImage?: (number | null) | Media;
+  image?: (number | null) | Media;
   description?: string | null;
   price: number;
   salePrice?: number | null;
-  relatedProducts?: (number | Product)[] | null;
-  categories?: (number | Category)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -262,6 +260,7 @@ export interface Product {
   publishedAt?: string | null;
   slug?: string | null;
   slugLock?: boolean | null;
+  categories?: (number | Category)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -511,6 +510,9 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: 'products' | null;
+  /**
+   * Show products from these categories. Leave empty to show all products from all categories.
+   */
   categories?: (number | Category)[] | null;
   limit?: number | null;
   selectedDocs?:
@@ -770,6 +772,51 @@ export interface Store {
     street?: string | null;
     complement?: string | null;
     number?: string | null;
+  };
+  openingHours?: {
+    sunday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    monday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    tuesday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    wednesday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    thursday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    friday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+    saturday?: {
+      isClosed?: boolean | null;
+      open?: string | null;
+      close?: string | null;
+    };
+  };
+  delivery?: {
+    deliveryPrice?: number | null;
+    /**
+     * Delivery time in minutes
+     */
+    deliveryTime?: number | null;
+    minimumValue?: number | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -1143,12 +1190,10 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   tenant?: T;
   title?: T;
-  heroImage?: T;
+  image?: T;
   description?: T;
   price?: T;
   salePrice?: T;
-  relatedProducts?: T;
-  categories?: T;
   meta?:
     | T
     | {
@@ -1159,6 +1204,7 @@ export interface ProductsSelect<T extends boolean = true> {
   publishedAt?: T;
   slug?: T;
   slugLock?: T;
+  categories?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1297,6 +1343,66 @@ export interface StoresSelect<T extends boolean = true> {
         street?: T;
         complement?: T;
         number?: T;
+      };
+  openingHours?:
+    | T
+    | {
+        sunday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        monday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        tuesday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        wednesday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        thursday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        friday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+        saturday?:
+          | T
+          | {
+              isClosed?: T;
+              open?: T;
+              close?: T;
+            };
+      };
+  delivery?:
+    | T
+    | {
+        deliveryPrice?: T;
+        deliveryTime?: T;
+        minimumValue?: T;
       };
   updatedAt?: T;
   createdAt?: T;

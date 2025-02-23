@@ -40,6 +40,7 @@ export const Archive: Block = {
           value: 'selection',
         },
       ],
+      hidden: true,
     },
     {
       name: 'relationTo',
@@ -55,12 +56,15 @@ export const Archive: Block = {
           value: 'products',
         },
       ],
+      hidden: true,
     },
     {
       name: 'categories',
       type: 'relationship',
       admin: {
         condition: (_, siblingData) => siblingData.populateBy === 'collection',
+        description:
+          'Show products from these categories. Leave empty to show all products from all categories.',
       },
       hasMany: true,
       label: 'Categories To Show',
@@ -73,7 +77,7 @@ export const Archive: Block = {
         condition: (_, siblingData) => siblingData.populateBy === 'collection',
         step: 1,
       },
-      defaultValue: 10,
+      defaultValue: 1000,
       label: 'Limit',
     },
     {
