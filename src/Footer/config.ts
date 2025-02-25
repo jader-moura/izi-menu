@@ -6,7 +6,8 @@ import { revalidateFooter } from './hooks/revalidateFooter'
 export const Footer: GlobalConfig = {
   slug: 'footer',
   access: {
-    read: () => true,
+    read: ({ req: { user } }) => user?.role === 'super-admin',
+    update: ({ req: { user } }) => user?.role === 'super-admin',
   },
   fields: [
     {
