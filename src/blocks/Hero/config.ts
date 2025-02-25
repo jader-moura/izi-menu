@@ -1,4 +1,4 @@
-import type { Field } from 'payload'
+import type { Block } from 'payload'
 
 import {
   FixedToolbarFeature,
@@ -7,11 +7,8 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { linkGroup } from '@/fields/linkGroup'
-
-export const hero: Field = {
-  name: 'hero',
-  type: 'group',
+export const Hero: Block = {
+  slug: 'hero',
   fields: [
     {
       name: 'type',
@@ -53,11 +50,6 @@ export const hero: Field = {
       }),
       label: false,
     },
-    linkGroup({
-      overrides: {
-        maxRows: 2,
-      },
-    }),
     {
       name: 'media',
       type: 'upload',
@@ -68,5 +60,8 @@ export const hero: Field = {
       required: true,
     },
   ],
-  label: false,
+  labels: {
+    plural: 'Heros',
+    singular: 'Hero',
+  },
 }
