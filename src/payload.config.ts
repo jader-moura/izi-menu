@@ -25,8 +25,9 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     components: {
-      beforeLogin: ['@/components/BeforeLogin'],
-      beforeDashboard: ['@/components/BeforeDashboard'],
+      graphics: {
+        Logo: '@/components/DashboardLogo#DashboardLogo',
+      },
       views: {
         editStore: {
           Component: '@/views/StoreDashboard#StoreDashboard',

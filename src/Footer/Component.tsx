@@ -6,7 +6,7 @@ import type { Footer, Store } from '@/payload-types'
 
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
-import { Logo } from '@/components/Logo/Logo'
+import { Logo } from '@/components/Logo'
 
 interface FooterProps {
   store: Store

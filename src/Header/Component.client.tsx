@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { SearchIcon } from '@payloadcms/ui/icons/Search'
-import { Logo } from '@/components/Logo/Logo'
+import { Logo } from '@/components/Logo'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
@@ -81,7 +81,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ store, slug }) => {
         </div>
       </header>
       <div className="container">
-        <div className="text-sm p-2 flex items-center gap-2">
+        <div className="text-sm p-2 flex items-center gap-2 opacity-85">
           {isOpen ? (
             <p>Open now, closes at {dayjs(todayHours.close).format('HH:mm')}</p>
           ) : (

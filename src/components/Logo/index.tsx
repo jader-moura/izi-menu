@@ -15,6 +15,8 @@ export const Logo = (props: Props) => {
   const loading = loadingFromProps || 'lazy'
   const priority = priorityFromProps || 'low'
 
+  console.log('header logo', src)
+
   return (
     <div className="w-16 h-16 relative rounded-full overflow-hidden">
       <Image
