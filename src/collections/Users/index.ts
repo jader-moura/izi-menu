@@ -155,11 +155,14 @@ export const Users: CollectionConfig = {
                 },
               })
 
-              const store = await req.payload.create({
+              await req.payload.create({
                 collection: 'stores',
                 data: {
                   name: `${data?.name} store`,
                   tenant: tenant.id,
+                  address: {
+                    country: 'BR',
+                  },
                 },
               })
 
