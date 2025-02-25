@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { cn } from '@/utilities/ui'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
@@ -11,7 +11,7 @@ import { Header } from '@/Header/Component'
 import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import { draftMode, headers } from 'next/headers'
+import { draftMode } from 'next/headers'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -20,9 +20,16 @@ import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { Store } from '@/payload-types'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: { tenant: string }
+}) {
+  const { tenant: slug } = await params
   const { isEnabled } = await draftMode()
-  const { slug, store } = await getStoreBySlug()
+  const { store } = await getStoreBySlug(slug)
 
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
@@ -39,9 +46,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
 
-          <Header slug={slug} store={store} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Header slug={slug} store={store} />
+          </Suspense>
           {children}
-          <Footer slug={slug} store={store} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Footer slug={slug} store={store} />
+          </Suspense>
         </Providers>
       </body>
     </html>
@@ -57,20 +68,14 @@ export const metadata: Metadata = {
   },
 }
 
-async function getStoreBySlug() {
-  const headersList = headers()
-  const fullUrl = (await headersList)?.get('referer') || ''
-  const slug = fullUrl.split('/')[3] || ''
-
+async function getStoreBySlug(slug: string) {
   const payload = await getPayload({ config: configPromise })
 
   const { docs } = await payload.find({
     collection: 'stores',
-    draft: false,
     limit: 1,
     overrideAccess: true,
     pagination: false,
-    depth: 1,
     where: {
       'tenant.slug': {
         equals: slug,
@@ -80,5 +85,5 @@ async function getStoreBySlug() {
 
   const store: Store = docs[0] || ({} as Store)
 
-  return { store, slug }
+  return { store }
 }
