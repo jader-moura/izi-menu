@@ -155,6 +155,7 @@ export const Users: CollectionConfig = {
                 },
               })
 
+              // Create user store
               await req.payload.create({
                 collection: 'stores',
                 data: {
@@ -163,6 +164,21 @@ export const Users: CollectionConfig = {
                   address: {
                     country: 'BR',
                   },
+                },
+              })
+
+              // Create user home page
+              await req.payload.create({
+                collection: 'pages',
+                data: {
+                  slug: 'home',
+                  title: 'Home',
+                  tenant: tenant.id,
+                  layout: [
+                    {
+                      blockType: 'archive',
+                    },
+                  ],
                 },
               })
 
