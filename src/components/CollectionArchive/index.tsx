@@ -1,5 +1,6 @@
 'use client'
-import React, { useRef } from 'react'
+import React from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card } from '@/components/Card'
 import { Product } from '@/payload-types'
 
@@ -8,6 +9,17 @@ export type Props = {
 }
 
 export const CollectionArchive: React.FC<Props> = ({ products }) => {
+  const searchParams = useSearchParams()
+  const searchQuery = (searchParams.get('search') || '').toLowerCase()
+
+  const filteredProducts = searchQuery
+    ? products.filter((product) => product.title?.toLowerCase().includes(searchQuery))
+    : products
+
+  if (filteredProducts.length === 0) {
+    return <div className="container py-4 text-center text-lg">No products found</div>
+  }
+
   const groupByCategory = (products: Product[]) => {
     return products.reduce(
       (acc, product) => {
@@ -25,13 +37,15 @@ export const CollectionArchive: React.FC<Props> = ({ products }) => {
     )
   }
 
-  const categorizedProducts = groupByCategory(products)
-  const navRef = useRef<HTMLDivElement>(null)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navRef = React.useRef<HTMLDivElement>(null)
 
   const scrollToCategory = (categoryId: string) => {
     const element = document.getElementById(categoryId)
     element?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+
+  const categorizedProducts = groupByCategory(filteredProducts)
 
   return (
     <div className="container flex flex-col gap-4">
