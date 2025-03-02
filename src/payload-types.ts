@@ -72,6 +72,7 @@ export interface Config {
     media: Media;
     categories: Category;
     stores: Store;
+    productVariants: ProductVariant;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-jobs': PayloadJob;
@@ -88,6 +89,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     stores: StoresSelect<false> | StoresSelect<true>;
+    productVariants: ProductVariantsSelect<false> | ProductVariantsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -294,6 +296,7 @@ export interface Product {
   slug?: string | null;
   slugLock?: boolean | null;
   categories?: (number | Category)[] | null;
+  productVariant?: (number | ProductVariant)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -412,6 +415,46 @@ export interface Category {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productVariants".
+ */
+export interface ProductVariant {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  title: string;
+  description?: string | null;
+  /**
+   * The user can select this quantity of this variant
+   */
+  quantitySelectable?: number | null;
+  product?: (number | Product)[] | null;
+  /**
+   * The user must choose at least this number of options
+   */
+  atLeastChoose?: number | null;
+  /**
+   * The user can choose at most this number of options
+   */
+  atMostChoose?: number | null;
+  options?: AditionalOptions[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Aditional Options".
+ */
+export interface AditionalOptions {
+  aditional: {
+    title: string;
+    image?: (number | null) | Media;
+    price?: number | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aditional-options';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -951,6 +994,10 @@ export interface PayloadLockedDocument {
         value: number | Store;
       } | null)
     | ({
+        relationTo: 'productVariants';
+        value: number | ProductVariant;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1177,6 +1224,7 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   slugLock?: T;
   categories?: T;
+  productVariant?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1378,6 +1426,41 @@ export interface StoresSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productVariants_select".
+ */
+export interface ProductVariantsSelect<T extends boolean = true> {
+  tenant?: T;
+  title?: T;
+  description?: T;
+  quantitySelectable?: T;
+  product?: T;
+  atLeastChoose?: T;
+  atMostChoose?: T;
+  options?:
+    | T
+    | {
+        'aditional-options'?: T | AditionalOptionsSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Aditional Options_select".
+ */
+export interface AditionalOptionsSelect {
+  aditional?:
+    | boolean
+    | {
+        title?: boolean;
+        image?: boolean;
+        price?: boolean;
+      };
+  id?: boolean;
+  blockName?: boolean;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

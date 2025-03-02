@@ -33,16 +33,17 @@ export const Products: CollectionConfig = {
   },
   fields: [
     tenantField,
-    {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
+
     {
       type: 'tabs',
       tabs: [
         {
           fields: [
+            {
+              name: 'title',
+              type: 'text',
+              required: true,
+            },
             {
               name: 'image',
               type: 'upload',
@@ -123,6 +124,15 @@ export const Products: CollectionConfig = {
       },
       hasMany: true,
       relationTo: 'categories',
+    },
+    {
+      name: 'productVariant',
+      type: 'relationship',
+      admin: {
+        position: 'sidebar',
+      },
+      hasMany: true,
+      relationTo: 'productVariants',
     },
   ],
   hooks: {
