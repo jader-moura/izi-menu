@@ -73,6 +73,7 @@ export interface Config {
     categories: Category;
     stores: Store;
     productVariants: ProductVariant;
+    productFlavours: ProductFlavour;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-jobs': PayloadJob;
@@ -90,6 +91,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     stores: StoresSelect<false> | StoresSelect<true>;
     productVariants: ProductVariantsSelect<false> | ProductVariantsSelect<true>;
+    productFlavours: ProductFlavoursSelect<false> | ProductFlavoursSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
@@ -282,8 +284,10 @@ export interface Product {
   title: string;
   image?: (number | null) | Media;
   description?: string | null;
+  priceSetByFlavours?: boolean | null;
   price: number;
   salePrice?: number | null;
+  productFlavours?: (number | null) | ProductFlavour;
   meta?: {
     title?: string | null;
     /**
@@ -396,6 +400,38 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productFlavours".
+ */
+export interface ProductFlavour {
+  id: number;
+  tenant?: (number | null) | Tenant;
+  title: string;
+  description?: string | null;
+  /**
+   * The user can choose at most this number of flavour options
+   */
+  atMostChoose?: number | null;
+  options?: FlavourOptions[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Flavour Options".
+ */
+export interface FlavourOptions {
+  flavour: {
+    title: string;
+    description?: string | null;
+    image?: (number | null) | Media;
+    price: number;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'flavour-options';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
@@ -425,11 +461,6 @@ export interface ProductVariant {
   tenant?: (number | null) | Tenant;
   title: string;
   description?: string | null;
-  /**
-   * The user can select this quantity of this variant
-   */
-  quantitySelectable?: number | null;
-  product?: (number | Product)[] | null;
   /**
    * The user must choose at least this number of options
    */
@@ -998,6 +1029,10 @@ export interface PayloadLockedDocument {
         value: number | ProductVariant;
       } | null)
     | ({
+        relationTo: 'productFlavours';
+        value: number | ProductFlavour;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1211,8 +1246,10 @@ export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   image?: T;
   description?: T;
+  priceSetByFlavours?: T;
   price?: T;
   salePrice?: T;
+  productFlavours?: T;
   meta?:
     | T
     | {
@@ -1435,8 +1472,6 @@ export interface ProductVariantsSelect<T extends boolean = true> {
   tenant?: T;
   title?: T;
   description?: T;
-  quantitySelectable?: T;
-  product?: T;
   atLeastChoose?: T;
   atMostChoose?: T;
   options?:
@@ -1456,6 +1491,39 @@ export interface AditionalOptionsSelect {
     | boolean
     | {
         title?: boolean;
+        image?: boolean;
+        price?: boolean;
+      };
+  id?: boolean;
+  blockName?: boolean;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "productFlavours_select".
+ */
+export interface ProductFlavoursSelect<T extends boolean = true> {
+  tenant?: T;
+  title?: T;
+  description?: T;
+  atMostChoose?: T;
+  options?:
+    | T
+    | {
+        'flavour-options'?: T | FlavourOptionsSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Flavour Options_select".
+ */
+export interface FlavourOptionsSelect {
+  flavour?:
+    | boolean
+    | {
+        title?: boolean;
+        description?: boolean;
         image?: boolean;
         price?: boolean;
       };

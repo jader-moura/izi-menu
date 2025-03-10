@@ -30,6 +30,7 @@ export const Products: CollectionConfig = {
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     useAsTitle: 'title',
+    group: 'Products',
   },
   fields: [
     tenantField,
@@ -40,30 +41,58 @@ export const Products: CollectionConfig = {
         {
           fields: [
             {
-              name: 'title',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'image',
-              type: 'upload',
-              relationTo: 'media',
-            },
-            {
-              name: 'description',
-              type: 'textarea',
-            },
-            {
-              type: 'row',
+              type: 'collapsible',
+              label: 'Content',
               fields: [
                 {
-                  name: 'price',
-                  type: 'number',
+                  name: 'title',
+                  type: 'text',
                   required: true,
                 },
                 {
-                  name: 'salePrice',
-                  type: 'number',
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                },
+              ],
+            },
+            {
+              type: 'collapsible',
+              label: 'Price Settings',
+              fields: [
+                {
+                  type: 'checkbox',
+                  name: 'priceSetByFlavours',
+                  label: 'Price set by flavours',
+                },
+                {
+                  type: 'row',
+                  admin: {
+                    condition: (_, { priceSetByFlavours } = {}) => !priceSetByFlavours,
+                  },
+                  fields: [
+                    {
+                      name: 'price',
+                      type: 'number',
+                      required: true,
+                    },
+                    {
+                      name: 'salePrice',
+                      type: 'number',
+                    },
+                  ],
+                },
+                {
+                  name: 'productFlavours',
+                  type: 'relationship',
+                  relationTo: 'productFlavours',
+                  admin: {
+                    condition: (_, { priceSetByFlavours } = {}) => priceSetByFlavours,
+                  },
                 },
               ],
             },

@@ -14,6 +14,7 @@ import { Tenants } from './collections/Tenants'
 import { Users } from './collections/Users'
 import { Stores } from './collections/Stores'
 import { ProductVariants } from './collections/ProductVariants'
+import { ProductFlavours } from './collections/ProductFlavours'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -74,7 +75,17 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Users, Tenants, Pages, Products, Media, Categories, Stores, ProductVariants],
+  collections: [
+    Users,
+    Tenants,
+    Pages,
+    Products,
+    Media,
+    Categories,
+    Stores,
+    ProductVariants,
+    ProductFlavours,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

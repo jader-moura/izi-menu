@@ -15,6 +15,7 @@ export const Categories: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'tenant'],
+    group: 'Products',
   },
   fields: [
     tenantField,

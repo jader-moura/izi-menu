@@ -14,6 +14,7 @@ export const ProductVariants: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    group: 'Products',
   },
   fields: [
     tenantField,
@@ -27,61 +28,31 @@ export const ProductVariants: CollectionConfig = {
       type: 'textarea',
     },
     {
-      type: 'tabs',
-      tabs: [
+      type: 'row',
+      fields: [
         {
-          label: 'Product Configurator',
+          name: 'atLeastChoose',
 
-          fields: [
-            {
-              name: 'quantitySelectable',
-              type: 'number',
-              label: 'Quantity Selectable',
-              admin: {
-                description: 'The user can select this quantity of this variant',
-              },
-            },
-            {
-              name: 'product',
-              type: 'relationship',
-              relationTo: 'products',
-              hasMany: true,
-            },
-          ],
+          type: 'number',
+          admin: {
+            description: 'The user must choose at least this number of options',
+            width: '50%',
+          },
         },
         {
-          label: 'Aditional Options',
-          fields: [
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'atLeastChoose',
-
-                  type: 'number',
-                  admin: {
-                    description: 'The user must choose at least this number of options',
-                    width: '50%',
-                  },
-                },
-                {
-                  name: 'atMostChoose',
-                  type: 'number',
-                  admin: {
-                    description: 'The user can choose at most this number of options',
-                    width: '50%',
-                  },
-                },
-              ],
-            },
-            {
-              name: 'options',
-              type: 'blocks',
-              blocks: [AditionalOptions],
-            },
-          ],
+          name: 'atMostChoose',
+          type: 'number',
+          admin: {
+            description: 'The user can choose at most this number of options',
+            width: '50%',
+          },
         },
       ],
+    },
+    {
+      name: 'options',
+      type: 'blocks',
+      blocks: [AditionalOptions],
     },
   ],
 }

@@ -3,12 +3,14 @@ import React from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card } from '@/components/Card'
 import { Product } from '@/payload-types'
+import Link from 'next/link'
 
 export type Props = {
+  tenant: string
   products: Product[]
 }
 
-export const CollectionArchive: React.FC<Props> = ({ products }) => {
+export const CollectionArchive: React.FC<Props> = ({ tenant, products }) => {
   const searchParams = useSearchParams()
   const searchQuery = (searchParams.get('search') || '').toLowerCase()
 
@@ -68,7 +70,9 @@ export const CollectionArchive: React.FC<Props> = ({ products }) => {
           <div className="grid grid-cols-4 md:grid-cols-8 gap-y-4 gap-x-4 lg:gap-y-8 lg:gap-x-8 xl:gap-x-8">
             {products.map((product, index) => (
               <div className="col-span-4" key={index}>
-                <Card className="h-full" doc={product} relationTo="products" />
+                <Link href={`/${tenant}/product/${product.slug}`}>
+                  <Card className="h-full" doc={product} relationTo="products" />
+                </Link>
               </div>
             ))}
           </div>
