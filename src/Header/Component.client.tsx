@@ -3,11 +3,12 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import Link from 'next/link'
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { SearchIcon } from '@payloadcms/ui/icons/Search'
-import { CloseMenuIcon } from '@payloadcms/ui/icons/CloseMenu'
 import { Logo } from '@/components/Logo'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
+import { IoCartOutline } from 'react-icons/io5'
+import { IoSearchOutline } from 'react-icons/io5'
+import { IoCloseOutline } from 'react-icons/io5'
 dayjs.extend(isBetween)
 
 import type { Store } from '@/payload-types'
@@ -87,20 +88,20 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ store, slug }) => {
           <div className="py-2 flex justify-between items-center h-full">
             {isSearching ? (
               <div className="flex items-center gap-2 bg-background rounded-lg p-2 w-full border-border">
-                <SearchIcon />
+                <IoSearchOutline className="text-xl" />
                 <input
                   placeholder="What do you want to buy today?"
                   className="flex-1 border-none outline-none bg-transparent"
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
-                <button onClick={handleSearchClear}>
-                  <CloseMenuIcon />
+                <button className="text-xl" onClick={handleSearchClear}>
+                  <IoCloseOutline />
                 </button>
               </div>
             ) : (
               <>
-                <Link href={slug} className="flex items-center gap-2">
+                <Link href={`/${slug}`} className="flex items-center gap-2">
                   <Logo
                     alt={store.name || ''}
                     {...(typeof store.logo === 'object' &&
@@ -115,10 +116,13 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ store, slug }) => {
                   />
                   <h1 className="uppercase font-bold text-base">{store.name}</h1>
                 </Link>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xl">
                   <button onClick={() => setIsSearching(true)}>
-                    <SearchIcon />
+                    <IoSearchOutline />
                   </button>
+                  <Link href={`/${slug}/cart`}>
+                    <IoCartOutline />
+                  </Link>
                 </div>
               </>
             )}

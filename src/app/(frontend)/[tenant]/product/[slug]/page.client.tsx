@@ -1,10 +1,13 @@
 'use client'
 import React, { useState, useMemo } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Product, ProductFlavour, ProductVariant, Media } from '@/payload-types'
 import { toast } from 'react-hot-toast'
+import { IoCloseOutline } from 'react-icons/io5'
 
 interface PageClientProps {
+  tenant: string
   product: Product
 }
 
@@ -12,11 +15,17 @@ interface SelectedOptions {
   [variantId: number]: string[] // For additional options from productVariant
 }
 
-const PageClient = ({ product }: PageClientProps) => {
+const PageClient = ({ tenant, product }: PageClientProps) => {
+  const router = useRouter()
+
+  // States for product options & flavours
   const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({})
   const [selectedFlavours, setSelectedFlavours] = useState<string[]>([])
-  // New state to hold the user-selected number of flavours
   const [flavourCount, setFlavourCount] = useState<number>(0)
+
+  // Modal state and quantity for modal
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [modalQuantity, setModalQuantity] = useState<number>(1)
 
   const hasSalePrice =
     !product.priceSetByFlavours && product.salePrice && product.salePrice < product.price
@@ -73,7 +82,6 @@ const PageClient = ({ product }: PageClientProps) => {
     })
   }
 
-  // When toggling a flavour, use the user-selected flavourCount as the max allowed.
   const handleToggleFlavour = (optionId: string) => {
     setSelectedFlavours((prev) => {
       if (flavourCount === 0) {
@@ -92,6 +100,59 @@ const PageClient = ({ product }: PageClientProps) => {
     })
   }
 
+  // New function to add the product to the cart with the chosen quantity.
+  const addToCartItem = (quantity: number) => {
+    // Build full details for selected additional options.
+    const fullSelectedOptions: {
+      [variantId: number]: any[]
+    } = {}
+    if (product.productVariant) {
+      ;(product.productVariant as ProductVariant[]).forEach((variant) => {
+        const selectedIds = selectedOptions[variant.id] || []
+        const optionsDetails = variant.options?.filter(
+          (option) => option.id && selectedIds.includes(option.id),
+        )
+        if (optionsDetails && optionsDetails.length > 0) {
+          fullSelectedOptions[variant.id] = optionsDetails
+        }
+      })
+    }
+
+    // Build full details for selected flavours.
+    let fullSelectedFlavours: any[] = []
+    if (product.priceSetByFlavours && product.productFlavours) {
+      fullSelectedFlavours =
+        (product.productFlavours as ProductFlavour).options?.filter(
+          (option) => option.id && selectedFlavours.includes(option.id),
+        ) || []
+    }
+
+    const cartItem = {
+      productId: product.id,
+      title: product.title,
+      image: product.image,
+      selectedFlavours: fullSelectedFlavours,
+      selectedOptions: fullSelectedOptions,
+      totalPrice,
+      quantity,
+    }
+
+    // Get existing cart from localStorage.
+    let cart: any[] = []
+    const existingCart = localStorage.getItem('cart')
+    if (existingCart) {
+      try {
+        cart = JSON.parse(existingCart)
+      } catch (error) {
+        cart = []
+      }
+    }
+    cart.push(cartItem)
+    localStorage.setItem('cart', JSON.stringify(cart))
+    toast.success('Item added to cart!')
+  }
+
+  // Opens the modal after validations pass.
   const handleAddToCart = () => {
     if (product.priceSetByFlavours && product.productFlavours) {
       if (flavourCount === 0) {
@@ -110,26 +171,53 @@ const PageClient = ({ product }: PageClientProps) => {
         const currentSelected = selectedOptions[(variant as ProductVariant).id] || []
         if (currentSelected.length < min) {
           alert(
-            `Please select at least ${min} option${min > 1 ? 's' : ''} for "${(variant as ProductVariant).title}".`,
+            `Please select at least ${min} option${min > 1 ? 's' : ''} for "${
+              (variant as ProductVariant).title
+            }".`,
           )
           return
         }
       }
     }
 
-    alert('Item added to cart!')
+    // Open modal for quantity selection.
+    setModalQuantity(1)
+    setShowModal(true)
+  }
+
+  const increaseModalQuantity = () => {
+    setModalQuantity((prev) => prev + 1)
+  }
+
+  const decreaseModalQuantity = () => {
+    setModalQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+  }
+
+  // When Checkout is clicked in the modal.
+  const handleCheckout = () => {
+    addToCartItem(modalQuantity)
+    setShowModal(false)
+    router.push(`/${tenant}/cart`)
+  }
+
+  // When Add more products is clicked in the modal.
+  const handleAddMoreProducts = () => {
+    addToCartItem(modalQuantity)
+    setShowModal(false)
+    router.back()
   }
 
   return (
     <div className="p-4 max-w-lg mx-auto">
       {product.image && (
-        <Image
-          src={`${process.env.NEXT_PUBLIC_SERVER_URL}${(product.image as Media).url}`}
-          alt={(product.image as Media).alt || product.title}
-          width={500}
-          height={500}
-          className="w-full h-auto object-cover rounded-lg"
-        />
+        <div className="relative w-full aspect-square">
+          <Image
+            src={`${process.env.NEXT_PUBLIC_SERVER_URL}${(product.image as Media).url}`}
+            alt={(product.image as Media).alt || product.title}
+            fill
+            className="w-full h-auto object-cover rounded-lg"
+          />
+        </div>
       )}
 
       <h1 className="text-2xl font-bold mt-4">{product.title}</h1>
@@ -149,15 +237,13 @@ const PageClient = ({ product }: PageClientProps) => {
       )}
 
       {(product.productVariant as ProductVariant[])?.map((variant: ProductVariant) => {
-        const min = (variant as ProductVariant).atLeastChoose ?? 0
-        const max = (variant as ProductVariant).atMostChoose ?? Infinity
-        const currentSelected = selectedOptions[(variant as ProductVariant).id] || []
+        const min = variant.atLeastChoose ?? 0
+        const max = variant.atMostChoose ?? Infinity
+        const currentSelected = selectedOptions[variant.id] || []
         return (
-          <div key={(variant as ProductVariant).id} className="mt-6">
-            <h2 className="text-lg font-semibold">{(variant as ProductVariant).title}</h2>
-            {(variant as ProductVariant).description && (
-              <p className="text-sm opacity-80">{(variant as ProductVariant).description}</p>
-            )}
+          <div key={variant.id} className="mt-6">
+            <h2 className="text-lg font-semibold">{variant.title}</h2>
+            {variant.description && <p className="text-sm opacity-80">{variant.description}</p>}
             {(min > 0 || max < Infinity) && (
               <p className="text-xs text-gray-500 mt-1">
                 {min > 0 && `Must choose at least ${min}. `}
@@ -224,7 +310,9 @@ const PageClient = ({ product }: PageClientProps) => {
             <p className="text-sm font-medium">Select number of flavours:</p>
             <div className="flex space-x-4 mt-1">
               {Array.from(
-                { length: (product.productFlavours as ProductFlavour).atMostChoose || 0 },
+                {
+                  length: (product.productFlavours as ProductFlavour).atMostChoose || 0,
+                },
                 (_, i) => i + 1,
               ).map((count) => (
                 <label key={count} className="flex items-center">
@@ -235,7 +323,6 @@ const PageClient = ({ product }: PageClientProps) => {
                     checked={flavourCount === count}
                     onChange={() => {
                       setFlavourCount(count)
-                      // Reset selected flavours if current selection exceeds new count
                       if (selectedFlavours.length > count) {
                         setSelectedFlavours(selectedFlavours.slice(0, count))
                       }
@@ -298,6 +385,45 @@ const PageClient = ({ product }: PageClientProps) => {
       <button onClick={handleAddToCart} className="mt-6 bg-main text-white px-4 py-2 rounded-lg">
         Add to Cart R$ {totalPrice.toFixed(2)}
       </button>
+
+      {/* Modal for selecting quantity */}
+      {showModal && (
+        <div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-background p-6 rounded-lg max-w-md w-full relative">
+            <button onClick={() => setShowModal(false)} className="absolute top-5 right-5 text-xl">
+              <IoCloseOutline />
+            </button>
+            <h2 className="text-xl font-bold mb-4">Select Quantity</h2>
+            <p></p>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={decreaseModalQuantity}
+                className="w-8 h-8 flex items-center justify-center border border-border rounded-lg"
+              >
+                -
+              </button>
+              <span className="text-lg">{modalQuantity}</span>
+              <button
+                onClick={increaseModalQuantity}
+                className="w-8 h-8 flex items-center justify-center border border-border rounded-lg"
+              >
+                +
+              </button>
+            </div>
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                onClick={handleAddMoreProducts}
+                className="bg-transparent border border-main text-main px-4 py-2 rounded-lg"
+              >
+                Add more products
+              </button>
+              <button onClick={handleCheckout} className="bg-main text-white px-4 py-2 rounded-lg">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

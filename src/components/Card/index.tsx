@@ -50,20 +50,24 @@ export const Card: React.FC<{
           )}
         </div>
       </div>
-      {typeof image === 'number' || typeof image?.url !== 'string' ? (
-        <div className="">No image</div>
-      ) : (
+      {
         <div className="relative w-24 h-24 rounded-lg overflow-hidden">
           <ImageMedia
             alt={titleToUse || 'Product card image'}
             size="33vw"
+            width={200}
+            height={200}
             fill
-            imgClassName="object-contain"
+            imgClassName="object-cover"
             // @ts-ignore
-            src={image?.url}
+            src={
+              typeof image === 'number' || typeof image?.url !== 'string'
+                ? '/izi/placeholder-product.webp'
+                : image?.url
+            }
           />
         </div>
-      )}
+      }
     </article>
   )
 }

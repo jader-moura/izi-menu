@@ -22,7 +22,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div className="pb-6">
-      <PageClient product={product} />
+      <PageClient product={product} tenant={tenant} />
     </div>
   )
 }
